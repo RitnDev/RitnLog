@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------------------------------
+Version: 0.2.5
+Date: 08.02.2022
+  Adds:
+    - Ajout de 2 nouvelles options de mods.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.4
+Date: 02.02.2022
+  Adds:
+    - Ajout d'une option pour désactivé tout les logs lié aux events.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.3
+Date: 02.02.2022
+  Adds:
+    - Ajout du changelog.txt
+    - Remise en service du Remote commande de log.
+    - Ajout du log() en plus du print() pour avoir la trace dans le factorio-current.log
+  Fixes:
+    - Fix des settings. Reprise en compte des parametres de mods dans le code.
+    - Suppression du lien avec RitnLib pour rendre le mod independant.
+

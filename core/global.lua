@@ -1,6 +1,4 @@
-require("__RitnLib__.defines")
 ritnlog = {defines = require("core/defines")}
-
 
 -------------------- Global ------------------------
 if not global.log then global.log = {

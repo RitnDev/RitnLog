@@ -2,9 +2,7 @@
 local flib = require(ritnlog.defines.functions.events)
 ----------------------------------------------------------------------------------------
 -- settings
-local all_option = settings.startup[ritnlog.defines.settings.name.player_all_option].value
-local position_option = settings.startup[ritnlog.defines.settings.name.player_position_option].value
-local cursor_stack_option = settings.startup[ritnlog.defines.settings.name.player_cursor_option].value
+local all_option = false --settings.startup[ritnlog.defines.settings.name.player_all_option].value
 ----------------------------------------------------------------------------------------
 -- FUNCTIONS
 ----------------------------------------------------------------------------------------

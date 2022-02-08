@@ -1,10 +1,22 @@
-
+local modName = "RitnLog"
+local option_print = settings.startup[ritnlog.defines.settings.name.enable_log_print].value
+local option_logfile = settings.startup[ritnlog.defines.settings.name.enable_log_log].value
 
 -- function ignore event
 local function ignore(e) return end
 
 -- ritnlog
-local function ritnlog(data) print('[RITNLOG] > ' .. game.table_to_json(data)) end
+local function ritnlog(data, mod_name) 
+    if mod_name == nil then mod_name = modName end
+
+    if option_print or (option_print == false and option_logfile == false) then 
+        print('[' .. string.upper(mod_name) .. '] > ' .. game.table_to_json(data)) 
+    end
+
+    if option_logfile then 
+        log('[' .. string.upper(mod_name) .. '] > ' .. game.table_to_json(data)) 
+    end
+end
 
 -- getEvents
 local function getEvents(e)

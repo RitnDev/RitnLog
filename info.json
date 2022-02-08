@@ -1,12 +1,11 @@
 {
   "name": "RitnLog",
-  "version": "0.2.2",
+  "version": "0.2.5",
   "title": "RitnLog",
   "author": "Ritn",
   "description": "Trace log event.",
   "factorio_version": "1.1",
   "dependencies": [
-    "base >= 1.1",
-    "RitnLib >= 0.5.7"
+    "base >= 1.1"
   ]
 }

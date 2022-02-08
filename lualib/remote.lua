@@ -1,4 +1,4 @@
-local flib = require(ritnlog.defines.flib)
+local flib = require(ritnlog.defines.functions.events)
 
 local ritnlog_interface =
 {
@@ -7,7 +7,7 @@ local ritnlog_interface =
         enabled = true,
         mod_name = mod_name,
     }
-    return flib.trace_event(data)
+    return flib.ritnlog(data) 
   end,
 }
 

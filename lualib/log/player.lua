@@ -3,7 +3,7 @@ local flib = require(ritnlog.defines.functions.events)
 local event_type = "on_player"
 ----------------------------------------------------------------------------------------
 -- settings
-local all_option = settings.startup[ritnlog.defines.settings.name.player_all_option].value
+local all_option_player = settings.startup[ritnlog.defines.settings.name.player_all_option].value
 local position_option = settings.startup[ritnlog.defines.settings.name.player_position_option].value
 local position_advanced = true
 local cursor_stack_option = settings.startup[ritnlog.defines.settings.name.player_cursor_option].value
@@ -71,24 +71,6 @@ local function on_player_unbanned(e)
 end
 
    
-
-
------------------------
--- Function Cursor Stack
------------------------
-
-local function on_player_cursor_stack_changed(e) 
-    local LuaPlayer = game.players[e.player_index]
-    local data = {
-        event = flib.get_event(e, category),
-        player = flib.get_player(e),
-        cursor = flib.get_ItemStack(LuaPlayer.cursor_stack)
-    }
-    
-    flib.trace_event(data)
-end 
-
-
 local function on_player_display_scale_changed(e)
     local data = {
         event = flib.get_event(e, category),
@@ -100,6 +82,27 @@ local function on_player_display_scale_changed(e)
 end
 
 ]]
+
+-----------------------
+-- Function Cursor Stack
+-----------------------
+
+local function on_player_cursor_stack_changed(e)
+    local LuaPlayer = game.players[e.player_index]
+    local LuaSurface = game.players[e.surface_index]
+    if not global.log.players[LuaPlayer.name] then return end
+
+    local event = flib.events.get(e)
+    flib.player.add_index(e, event)
+
+    event.cursor = {
+        name = LuaPlayer.cursor_stack.name,
+        count = LuaPlayer.cursor_stack.count,
+    }
+
+    flib.log(event)
+end
+
 
 
 ----------------------------------------------------------------------------------------
@@ -220,16 +223,23 @@ for name,event in pairs(defines.events) do
 end
 ---------------------------------------------------------------------------------
 -- specifiques events
-module.events[defines.events.on_player_promoted] = on_player_promoted
-module.events[defines.events.on_player_demoted] = on_player_demoted
-module.events[defines.events.on_player_created] = on_player_created
-module.events[defines.events.on_player_changed_force] = on_player_changed_force
-module.events[defines.events.on_player_changed_position] = on_player_changed_position
-module.events[defines.events.on_player_removed] = on_player_removed
+if all_option_player then
+    module.events[defines.events.on_player_promoted] = on_player_promoted
+    module.events[defines.events.on_player_demoted] = on_player_demoted
+    module.events[defines.events.on_player_created] = on_player_created
+    module.events[defines.events.on_player_changed_force] = on_player_changed_force
+    module.events[defines.events.on_player_changed_position] = on_player_changed_position
+    module.events[defines.events.on_player_removed] = on_player_removed
+end
 ---------------------------------------------------------------------------------
--- on player_changed_position
+-- on_player_changed_position
 if position_option then 
     module.events[defines.events.on_player_changed_position] = on_player_changed_position
+end
+---------------------------------------------------------------------------------
+-- on_player_cursor_stack_changed
+if cursor_stack_option then 
+    module.events[defines.events.on_player_cursor_stack_changed] = on_player_cursor_stack_changed
 end
 ----------------------------------------------------------------------------------------
 return module
