@@ -24,7 +24,12 @@ end
 
 -- getEvents
 local function getEvents(e, event)
-    local rEvent = event
+    local rEvent
+    if event == nil then 
+        rEvent = {}
+    else 
+        rEvent = event 
+    end
     for name,ev in pairs(defines.events) do
         if e.name == 0 then return end
         if defines.events[name] ==  e.name then 
