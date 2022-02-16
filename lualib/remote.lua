@@ -21,6 +21,7 @@ local ritnlog_interface =
 --------------------------------------------
       local data = {}
       if type(map.data) ~= "table" then 
+        data.type = "details"
         data = {
           details = map.data
         }

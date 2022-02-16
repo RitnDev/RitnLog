@@ -1,50 +1,67 @@
 local modName = "RitnLog"
-local option_print = settings.startup["ritnmods-log-enable-log-print"].value
-local option_logfile = settings.startup["ritnmods-log-enable-log-log"].value
+-------------------------------------------------------------------------------
+--local RitnLog = require("lualib.classes.RitnLog")
+--local RitnEvent = require("lualib.classes.RitnEvent")
+--local RitnPlayer = require("lualib.classes.RitnPlayer")
+-------------------------------------------------------------------------------
 
 -- function ignore event
 local function ignore(e) return end
 
 -- ritnlog
 local function ritnlog(data, mod_name, force_print) 
-    if mod_name == nil then mod_name = modName end
-    local print_ok = false
-    if option_print or (option_print == false and option_logfile == false) then 
-        print('[' .. string.upper(mod_name) .. '] > ' .. game.table_to_json(data)) 
-        print_ok = true
-    end
-    if option_logfile then 
-        log('[' .. string.upper(mod_name) .. '] > ' .. game.table_to_json(data)) 
-    end
-    if force_print == nil then return end
-    if force_print == true and print_ok == false then 
-        print('[' .. string.upper(mod_name) .. '] > ' .. game.table_to_json(data)) 
-    end
+    pcall(function()
+        if mod_name == nil then mod_name = modName end
+        local print_ok = false
+        if global.log.use_print then 
+            print('[' .. string.upper(mod_name) .. '] > ' .. game.table_to_json(data)) 
+            print_ok = true
+        end
+        if global.log.use_log then 
+            log('[' .. string.upper(mod_name) .. '] > ' .. game.table_to_json(data)) 
+        end
+        if force_print == nil then return end
+        if force_print == true and print_ok == false then 
+            print('[' .. string.upper(mod_name) .. '] > ' .. game.table_to_json(data)) 
+        end
+    end)
 end
 
 -- getEvents
-local function getEvents(e, event)
-    local rEvent
-    if event == nil then 
-        rEvent = {}
-    else 
-        rEvent = event 
+local function getEvents(e, details)
+    local RitnEvent = {
+        type = "none",
+    }
+    local RitnDetails
+
+    if details ~= nil then  
+        RitnEvent.type = "details"
+        RitnEvent.details = details
+        RitnDetails = details
     end
-    for name,ev in pairs(defines.events) do
-        if e.name == 0 then return end
-        if defines.events[name] ==  e.name then 
-            rEvent.type = "event"
-            rEvent.event = ev
-            rEvent.event_name = name
-            return rEvent
+
+    if e ~= nil then 
+        for name,ev in pairs(defines.events) do
+            if e.name == 0 then return end
+            if defines.events[name] ==  e.name then 
+                RitnEvent.type = "event"
+                RitnEvent.event = {
+                    id = ev,
+                    event_name = name,
+                    details = RitnDetails,
+                }
+            end
         end
     end
+
+    return RitnEvent
 end
 
 
 -- function event basic
 local function basic(e) 
     if e.name == 0 then return end
+    --local RitnLog = RitnLog()
     ritnlog(getEvents(e))
 end
 
@@ -66,25 +83,38 @@ end
 
 -- ritnlog for events : on_player
 local function event_on_player(e)
-    local event = getEvents(e)
-    addPlayerIndex(e, event)
-    addController(e, event)
-    return event
+    local RitnEvent = getEvents(e)
+    local LuaPlayer = game.players[e.player_index]
+
+    RitnEvent.event.player = {
+        index = LuaPlayer.index,
+        name = LuaPlayer.name,
+    }
+
+    if global.settings.option_player_advanced == true then 
+        RitnEvent.event.player.force_name = LuaPlayer.force.name
+        RitnEvent.event.player.surface_name = LuaPlayer.surface.name
+        RitnEvent.event.player.controller_type = LuaPlayer.controller_type
+    end
+    return RitnEvent
 end
 
 -- fonction standard for events : on_player
 local function on_player_standard(e)
-    pcall(function()
-        local LuaPlayer = game.players[e.player_index]
-        if not global.log.players[LuaPlayer.name] then return end
-        local event = event_on_player(e)
-
-        global.log.events[e.name].active = true
-
-        ritnlog(event)
-    end)
+    local LuaPlayer = game.players[e.player_index]
+    local RitnEvent = {}
+    if not global.log.players[LuaPlayer.name] then return RitnEvent, LuaPlayer end
+    RitnEvent = event_on_player(e)
+    return RitnEvent, LuaPlayer
 end
 
+-- fonction standard on_player -> ritnlog()
+local function on_player_log(e, active) 
+    if active == nil or active == true then 
+        local RitnEvent = on_player_standard(e)
+        ritnlog(RitnEvent) 
+    end
+end
 
 
 ------------------------------------------
@@ -94,9 +124,10 @@ flib.events = {
     ignore = ignore,
     basic = basic,
     get = getEvents,
-    on_player = {
-        standard = on_player_standard
-    },
+    player = {
+        standard = on_player_standard,
+        log = on_player_log,
+    }
 }
 flib.player = {
     get = event_on_player,

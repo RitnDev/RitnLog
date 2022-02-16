@@ -1,9 +1,6 @@
 ----------------------------------------------------------------------------------------
 local flib = require(ritnlog.defines.functions.events)
 ----------------------------------------------------------------------------------------
--- settings
-local all_option = false --settings.startup[ritnlog.defines.settings.name.player_all_option].value
-----------------------------------------------------------------------------------------
 -- FUNCTIONS
 ----------------------------------------------------------------------------------------
 local function ignore(e) flib.events.ignore(e) end
@@ -35,8 +32,11 @@ local module = {}
 module.events = {}
 ---------------------------------------------------------------------------------
 -- for all events
-for _,event in pairs(defines.events) do 
-    module.events[event] = basic 
+for name,event in pairs(defines.events) do 
+    if string.sub(name,1,9) ~=  "on_player" 
+    and string.sub(name,1,13) ~=  "on_pre_player" then 
+        module.events[event] = basic 
+    end
 end
 ---------------------------------------------------------------------------------
 -- specifiques events
@@ -52,7 +52,7 @@ for i,v in pairs(player.events) do
 end
 ---------------------------------------------------------------------------------
 -- ignore events (settings)
-if all_option == false then 
+if global.settings.all_option == false then 
     module.events[defines.events.on_chunk_generated] = ignore
     module.events[defines.events.on_chunk_charted] = ignore
     module.events[defines.events.on_entity_damaged] = ignore

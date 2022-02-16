@@ -1,5 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.7
+Date: 16.02.2022
+  Changes:
+    - Changement dans les events on_player.
+    - Changement dans la creation des events (functions).
+  Adds:
+    - Ajouts d'options de mods supplémentaires.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.7
 Date: 14.02.2022
   Fixes:
     - Fix : on_game_created_from_scenario : functions/events.lua:31 attempt to index local 'rEvent' (a nil value).

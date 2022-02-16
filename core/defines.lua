@@ -24,16 +24,20 @@ defines.settings.name = {
     enable_log_log = defines.name_prefix .. "enable-log-log",
     disable_log = defines.name_prefix .. "disable-log",
     player_all_option = defines.name_prefix .. "player-all-option",
+    option_player_advanced = defines.name_prefix .. "option-player-advanced",
     player_position_option = defines.name_prefix .. "player-position-option",
     player_cursor_option = defines.name_prefix .. "player-cursor-option",
+    option_player_admin = defines.name_prefix .. "option-player-admin",
 }
 defines.settings.value = {
     enable_log_print = true,
     enable_log_log = true,
     disable_log = false,
     player_all_option = false,
-    player_position_option = true,
+    option_player_advanced = false,
+    player_position_option = false,
     player_cursor_option = false,
+    option_player_admin = true,
 }
 
 ---------------

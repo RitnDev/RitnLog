@@ -36,12 +36,28 @@ data:extend({
 		order = ritnlog.defines.name_prefix .. "0002",
 	},
 	{
+		-- Activer les options "player" administratif
+		type = "bool-setting",
+		name = ritnlog.defines.settings.name.option_player_admin,
+		setting_type = "startup",
+		default_value = ritnlog.defines.settings.value.option_player_admin,
+		order = ritnlog.defines.name_prefix .. "0003",
+	},
+	{
+		-- Activer les options avancées pour les events on_player
+		type = "bool-setting",
+		name = ritnlog.defines.settings.name.option_player_advanced,
+		setting_type = "startup",
+		default_value = ritnlog.defines.settings.value.option_player_advanced,
+		order = ritnlog.defines.name_prefix .. "0004",
+	},
+	{
 		-- Activer l'event "player" : on_player_changed_position
 		type = "bool-setting",
 		name = ritnlog.defines.settings.name.player_position_option,
 		setting_type = "startup",
 		default_value = ritnlog.defines.settings.value.player_position_option,
-		order = ritnlog.defines.name_prefix .. "0003",
+		order = ritnlog.defines.name_prefix .. "0005",
 	},
 	{
 		-- Activer l'event "player" : on_player_cursor_stack_changed
@@ -49,7 +65,7 @@ data:extend({
 		name = ritnlog.defines.settings.name.player_cursor_option,
 		setting_type = "startup",
 		default_value = ritnlog.defines.settings.value.player_cursor_option,
-		order = ritnlog.defines.name_prefix .. "0004",
+		order = ritnlog.defines.name_prefix .. "0006",
 	},
 
 })
