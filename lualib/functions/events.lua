@@ -27,6 +27,7 @@ local function ritnlog(data, mod_name, force_print)
     end)
 end
 
+
 -- getEvents
 local function getEvents(e, details)
     local RitnEvent = {
@@ -58,6 +59,42 @@ local function getEvents(e, details)
 end
 
 
+
+-- declenche des events pour création des infos par defaut du jeu
+local function active_default()
+    if global.log.default_active == false then 
+        -- create force by default (neutral, enemy, player)
+        local ev = {name = defines.events.on_force_created,}
+        local RitnEvent = getEvents(ev)
+        -- neutral
+        RitnEvent.event.force = {}
+        RitnEvent.event.force.index = game.forces['neutral'].index
+        RitnEvent.event.force.name = game.forces['neutral'].name
+        ritnlog(RitnEvent)
+        -- enemy
+        RitnEvent.event.force.index = game.forces['enemy'].index
+        RitnEvent.event.force.name = game.forces['enemy'].name
+        ritnlog(RitnEvent)
+        -- player
+        RitnEvent.event.force.index = game.forces['player'].index
+        RitnEvent.event.force.name = game.forces['player'].name
+        ritnlog(RitnEvent)
+
+        global.log.default_active = true
+    end
+end
+
+local function createGlobalPlayer(LuaPlayer)
+    active_default()
+    if not global.log.players[LuaPlayer.name] then 
+        global.log.players[LuaPlayer.name] = {
+            name = LuaPlayer.name,
+            index = LuaPlayer.index
+        }
+    end
+end
+
+
 -- function event basic
 local function basic(e) 
     if e.name == 0 then return end
@@ -86,6 +123,7 @@ local function event_on_player(e)
     local RitnEvent = getEvents(e)
     local LuaPlayer = game.players[e.player_index]
 
+
     RitnEvent.event.player = {
         index = LuaPlayer.index,
         name = LuaPlayer.name,
@@ -102,8 +140,13 @@ end
 -- fonction standard for events : on_player
 local function on_player_standard(e)
     local LuaPlayer = game.players[e.player_index]
-    local RitnEvent = {}
-    if not global.log.players[LuaPlayer.name] then return RitnEvent, LuaPlayer end
+    local RitnEvent = {type="none"}
+    pcall(function() createGlobalPlayer(LuaPlayer) end)
+
+    if not global.log.players[LuaPlayer.name] then 
+        RitnEvent = getEvents(e)
+        return RitnEvent, LuaPlayer 
+    end
     RitnEvent = event_on_player(e)
     return RitnEvent, LuaPlayer
 end
