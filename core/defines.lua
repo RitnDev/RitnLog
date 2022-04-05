@@ -5,11 +5,21 @@ local defines = {}
 
 defines.name_prefix = "ritnmods-log-"
 defines.mod_name = "ritnlog"
-defines.Modules = "core/modules"
-defines.functions = {
-    events = "lualib/functions/events",
-    listener = "lualib/functions/event-listener",
+
+
+defines.core = {
+    class = "core/class",
+    modules = "core/modules",
+    listener = "core/event-listener",
 }
+
+
+defines.classes = {
+    RitnEvent = "classes/RitnEvent",
+    RitnEventPlayer = "classes/RitnEventPlayer",
+    RitnEventForce = "classes/RitnEventForce",
+}
+
 
 defines.log = {
     events = "lualib/log/events", 
@@ -28,6 +38,7 @@ defines.settings.name = {
     player_position_option = defines.name_prefix .. "player-position-option",
     player_cursor_option = defines.name_prefix .. "player-cursor-option",
     option_player_admin = defines.name_prefix .. "option-player-admin",
+    advanced_position = defines.name_prefix .. "advanced-position",
 }
 defines.settings.value = {
     enable_log_print = true,
@@ -38,6 +49,7 @@ defines.settings.value = {
     player_position_option = false,
     player_cursor_option = false,
     option_player_admin = true,
+    advanced_position = false,
 }
 
 ---------------

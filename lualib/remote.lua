@@ -1,5 +1,6 @@
-local flib = require(ritnlog.defines.functions.events)
-
+----------------------------------------------------------------------------------------
+local RitnEvent = require(ritnlog.defines.classes.RitnEvent)
+----------------------------------------------------------------------------------------
 local ritnlog_interface =
 {
 ----------------------------------------------------------------------------------------
@@ -19,19 +20,23 @@ local ritnlog_interface =
 -- pcall
     local statut, errorMsg = pcall(function() 
 --------------------------------------------
-      local data = {}
-      if type(map.data) ~= "table" then 
-        data.type = "details"
-        data = {
-          details = map.data
-        }
-      else 
-        data = map.data
-      end
+      -- event
       if map.e ~= nil then 
-        data = flib.events.get(map.e, data)
+        RitnEvent:new(map.e)
       end
-      return flib.log(data, map.mod_name, map.force_print) 
+      -- Mod Name
+      if type(map.mod_name) == "string" then
+        RitnEvent:setModName(map.mod_name)
+      end
+      
+      -- data
+      if map.data == nil then 
+        RitnEvent:setIgnore(true)
+      else 
+        RitnEvent:setData(map.data)
+      end
+      -- log
+      RitnEvent:log(map.force_print) 
 --------------------------------------------
     end)
 -- status error
@@ -40,6 +45,31 @@ local ritnlog_interface =
     end
   end,
 ----------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------
+--                                disable_event
+  disable_event = function(event_name)
+    if global.log.events[event_name] then 
+      global.log.events[event_name] = false
+    end
+  end,
+----------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------
+--                                disable_event
+mod_name = function(mod_name)
+  if mod_name then 
+    if type(mod_name) == "string" then 
+      if mod_name ~= "" then 
+        global.log.mod_name = mod_name
+      end
+    end
+  end
+end,
+----------------------------------------------------------------------------------------
+
 }
 
 

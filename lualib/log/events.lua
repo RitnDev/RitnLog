@@ -1,11 +1,13 @@
 ----------------------------------------------------------------------------------------
-local flib = require(ritnlog.defines.functions.events)
+local RitnEvent = require(ritnlog.defines.classes.RitnEvent)
 ----------------------------------------------------------------------------------------
 -- FUNCTIONS
 ----------------------------------------------------------------------------------------
-local function ignore(e) flib.events.ignore(e) end
-local function basic(e) flib.events.basic(e) end
-
+local function ignore(e) return end
+local function basic(e) 
+    if e.name == 0 then return end
+    RitnEvent:new(e):setIgnore(not global.settings.all_option):log()
+end
 ----------------------------------------------------------------------------------------
 -- EVENTS
 ----------------------------------------------------------------------------------------
@@ -18,17 +20,14 @@ local function on_game_created_from_scenario(e)
     if remote.interfaces.freeplay.get_skip_intro then 
         global.log.scenario_active = false
     end
-    local event = flib.events.get(e)
 
-    flib.log(event)
+    RitnEvent:new(e):setIgnore(not global.settings.all_option):log()
 end
 
 -- on_cutscene_cancelled
 local function on_cutscene_cancelled(e)
     global.log.scenario_active = false
-    local event = flib.events.get(e)
-
-    flib.log(event)
+    RitnEvent:new(e):setIgnore(not global.settings.all_option):log()
 end
 
 ---------------------------------------------------------------------------------
@@ -39,7 +38,11 @@ module.events = {}
 for name,event in pairs(defines.events) do 
     if string.sub(name,1,9) ~=  "on_player" 
     and string.sub(name,1,13) ~=  "on_pre_player" then 
-        module.events[event] = basic 
+        if global.log.events[name] then 
+            module.events[event] = basic
+        else
+            module.events[event] = ignore  
+        end  
     end
 end
 ---------------------------------------------------------------------------------
@@ -56,7 +59,7 @@ for i,v in pairs(player.events) do
 end
 ---------------------------------------------------------------------------------
 -- ignore events (settings)
-if global.settings.all_option == false then 
+if global.settings.all_option then 
     module.events[defines.events.on_chunk_generated] = ignore
     module.events[defines.events.on_chunk_charted] = ignore
     module.events[defines.events.on_entity_damaged] = ignore
@@ -64,6 +67,10 @@ if global.settings.all_option == false then
     module.events[defines.events.on_post_entity_died] = ignore
     module.events[defines.events.on_entity_spawned] = ignore
     module.events[defines.events.on_selected_entity_changed] = ignore
+    module.events[defines.events.on_gui_text_changed] = ignore
+    module.events[defines.events.on_gui_location_changed] = ignore
+    module.events[defines.events.on_gui_click] = ignore
 end
+
 ----------------------------------------------------------------------------------------
 return module

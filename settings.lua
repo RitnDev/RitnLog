@@ -65,6 +65,14 @@ data:extend({
 		name = ritnlog.defines.settings.name.player_cursor_option,
 		setting_type = "startup",
 		default_value = ritnlog.defines.settings.value.player_cursor_option,
+		order = ritnlog.defines.name_prefix .. "0007",
+	},
+	{
+		-- La position n'est pas arrondis pour : on_player_changed_position
+		type = "bool-setting",
+		name = ritnlog.defines.settings.name.advanced_position,
+		setting_type = "startup",
+		default_value = ritnlog.defines.settings.value.advanced_position,
 		order = ritnlog.defines.name_prefix .. "0006",
 	},
 
