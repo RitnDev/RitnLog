@@ -1,27 +1,56 @@
 -- RitnEvent
 ----------------------------------------------------------------
-local class = require(ritnlog.defines.core.class)
+local class = require(ritnlib.defines.class.core)
+local LibEvent = require(ritnlib.defines.class.luaClass.event)
 ----------------------------------------------------------------
-
-local RitnEvent = class.newclass(function(base,...)
-    base.object_name = "RitnEvent"
-end)
-RitnEvent.object_name = "RitnEvent"
-
-----------------------------------------------------------------
---- FUNCTIONS
 
 local function getEventName(event)
     for name,ev in pairs(defines.events) do
-        if event.name == 0 then return end
-        if defines.events[name] ==  event.name then 
-            return {
-                id = ev,
-                event_name = name 
-            }
+        if event.name == 0 then return "on_tick" end
+        if defines.events[name] == event.name then 
+            return name
         end
     end
 end
+
+----------------------------------------------------------------
+--- CLASSE DEFINES
+----------------------------------------------------------------
+local RitnEvent = class.newclass(LibEvent, function(base, event)
+    if event == nil then return end
+    LibEvent.init(base, event, ritnlib.defines.log.name)
+    --------------------------------------------------
+    base.mod_name = global.log.mod_name
+    base.force_print = force_print
+    base.ignore = false
+    base.data = {}
+    base.data.type = "details"
+
+    if base.event then 
+        base.data.type = "event"
+        base.data.event = {
+            id = base.index,
+            event_name = base.name,
+        }
+
+        if base.player then 
+            base.data.event.player = {}
+            base.data.event.player.index = base.player.index
+            base.data.event.player.name = base.player.name
+
+            if global.log.settings.option_player_advanced == true then 
+                base.data.event.player.force_name = base.player.force.name
+                base.data.event.player.surface_name = base.player.surface.name
+                base.data.event.player.controller_type = base.player.controller_type
+            end
+        end
+
+        if string.sub(base.name,1,13) ==  "on_pre_player" then 
+            base.ignore = true
+        end
+    end
+end)
+----------------------------------------------------------------
 
 
 -- declenche des events pour création des infos par defaut du jeu
@@ -31,7 +60,10 @@ function RitnEvent:active_default()
         local ev = {name = defines.events.on_force_created}
         local data = {}
         data.type = "event"
-        data.event = getEventName(ev)
+        data.event = {
+            name = getEventName(ev),
+            index = ev.name
+        }
         data.event.force = {}
         -- neutral
         local LuaForce = game.forces['neutral']
@@ -61,7 +93,7 @@ end
 
 
 function RitnEvent:createGlobalPlayer()
-    local LuaPlayer = game.players[self.m_player_index]
+    local LuaPlayer = self.player
     self:active_default()
     if not global.log.players[LuaPlayer.name] then 
         global.log.players[LuaPlayer.name] = {
@@ -71,72 +103,6 @@ function RitnEvent:createGlobalPlayer()
     end
     return self
 end
-
-
-function RitnEvent:setDataForce(LuaForce)
-    self.data.event.force = {}
-    self.data.event.force.index = LuaForce.index
-    self.data.event.force.name = LuaForce.name
-    return self
-end
-
-
-function RitnEvent:setDataPlayer(LuaPlayer)
-    self.data.event.player = {}
-    self.data.event.player.index = LuaPlayer.index
-    self.data.event.player.name = LuaPlayer.name
-
-    if global.settings.option_player_advanced == true then 
-        self.data.event.player.force_name = LuaPlayer.force.name
-        self.data.event.player.surface_name = LuaPlayer.surface.name
-        self.data.event.player.controller_type = LuaPlayer.controller_type
-    end
-    
-    return self
-end
-
-----------------------------------------------------------------
-
-
-
-
-function RitnEvent:new(event, force_print)
-    self.mod_name = global.log.mod_name
-    self.force_print = force_print
-    self.ignore = false
-    self.m_event = event
-    self.data = {}
-    self.data.type = "details"
-
-    if self.m_event then 
-        for name,ev in pairs(defines.events) do
-            if event.name == 0 then return end
-            if defines.events[name] ==  event.name then 
-                self.m_name = name
-                self.m_index = ev
-            end
-        end
-        self.data.type = "event"
-        self.data.event = {
-            id = self.m_index,
-            event_name = self.m_name,
-        }
-
-        if self.m_event.player_index then 
-            self.m_player_index = event.player_index
-            local LuaPlayer = game.players[self.m_player_index]
-
-            self:setDataPlayer(LuaPlayer)
-        end
-
-        if string.sub(self.m_name,1,13) ==  "on_pre_player" then 
-            self.ignore = true
-        end
-    end
-
-    return self
-end
-
 ----------------------------------------------------------------
 
 
@@ -144,11 +110,11 @@ end
 
 
 function RitnEvent:getName()
-    return self.m_name
+    return self.name
 end
 
 function RitnEvent:getIndex()
-    return self.m_index
+    return self.index
 end
 
 function RitnEvent:getModName()
@@ -183,33 +149,32 @@ end
 
 function RitnEvent:playerChangedPosition()
     if global.log.scenario_active == true then return self end
-    
-    if self.m_event.player_index then 
-        local LuaPlayer = game.players[self.m_event.player_index]
-        if LuaPlayer then 
-            if LuaPlayer.valid then 
-                if LuaPlayer.object_name == "LuaPlayer" then 
-                    if global.settings.advanced_position then 
-                        self.data.event.position = {
-                            x=LuaPlayer.position.x,
-                            y=LuaPlayer.position.y,
-                        }
-                    else
-                        self.data.event.position = {
-                            x=math.floor(LuaPlayer.position.x),
-                            y=math.floor(LuaPlayer.position.y),
-                        }
-                    end
+
+    local LuaPlayer = self.player
+    if LuaPlayer then 
+        if LuaPlayer.valid then 
+            if LuaPlayer.object_name == "LuaPlayer" then 
+                if global.log.settings.advanced_position then 
+                    self.data.event.position = {
+                        x=LuaPlayer.position.x,
+                        y=LuaPlayer.position.y,
+                    }
+                else
+                    self.data.event.position = {
+                        x=math.floor(LuaPlayer.position.x),
+                        y=math.floor(LuaPlayer.position.y),
+                    }
                 end
             end
         end
     end
+
     return self
 end
 
 
 function RitnEvent:playerChangedForce()
-    local LuaForce = self.m_event.force
+    local LuaForce = self.force
     if LuaForce then 
         if LuaForce.valid then 
             if LuaForce.object_name == "LuaForce" then 
@@ -222,7 +187,7 @@ end
 
 
 function RitnEvent:playerChangedSurface()
-    local LuaSurface = game.surfaces[self.m_event.surface_index]
+    local LuaSurface = self.surface
     if LuaSurface then 
         if LuaSurface.valid then 
             if LuaSurface.object_name == "LuaSurface" then 
@@ -235,9 +200,9 @@ end
 
 
 function RitnEvent:playerLeftGame()
-    if self.m_event.reason then 
-        if type(self.m_event.reason) == "string" then 
-            self.data.event.reason = self.m_event.reason
+    if self.reason then 
+        if type(self.reason) == "string" then 
+            self.data.event.reason = self.reason
         end
     end
     return self
@@ -250,12 +215,12 @@ function RitnEvent:playerBanned()
         byPlayer = "server",
     }
     
-    pcall(function() self.data.event.banned.name = self.m_event.player_name end)
+    pcall(function() self.data.event.banned.name = self.player.name end)
     pcall(function() 
-        local byPlayer = game.players[self.m_event.by_player]
+        local byPlayer = game.players[self.event.by_player]
         self.data.event.banned.byPlayer = byPlayer.name 
     end)
-    pcall(function() self.data.event.banned.reason = self.m_event.reason end)
+    pcall(function() self.data.event.banned.reason = self.reason end)
     
     return self
 end
@@ -266,12 +231,12 @@ function RitnEvent:playerUnbanned()
         byPlayer = "server",
     }
     
-    pcall(function() self.data.event.unbanned.name = self.m_event.player_name end)
+    pcall(function() self.data.event.unbanned.name = self.player.name end)
     pcall(function() 
-        local byPlayer = game.players[self.m_event.by_player]
+        local byPlayer = game.players[self.event.by_player]
         self.data.event.unbanned.byPlayer = byPlayer.name 
     end)
-    pcall(function() self.data.event.unbanned.reason = self.m_event.reason end)
+    pcall(function() self.data.event.unbanned.reason = self.reason end)
     
     return self
 end
@@ -283,17 +248,17 @@ function RitnEvent:playerKicked()
     }
 
     pcall(function() 
-        local byPlayer = game.players[self.m_event.by_player]
+        local byPlayer = game.players[self.event.by_player]
         self.data.event.kicked.byPlayer = byPlayer.name 
     end)
-    pcall(function() self.data.event.kicked.reason = self.m_event.reason end)
+    pcall(function() self.data.event.kicked.reason = self.reason end)
     
     return self
 end
 
 
 function RitnEvent:playerDied()
-    local LuaEntity = self.m_event.cause
+    local LuaEntity = self.cause
 
     if LuaEntity then 
         pcall(function()
@@ -309,7 +274,7 @@ end
 
 
 function RitnEvent:playerCursorChanged()
-    local LuaPlayer  = game.players[self.m_event.player_index]
+    local LuaPlayer  = self.player
 
     self.data.event.cursor = {}
     self.data.event.cursor.name = "empty-hand"
@@ -326,7 +291,7 @@ end
 
 
 function RitnEvent:playerDisplayScaleChanged()
-    local LuaPlayer  = game.players[self.m_event.player_index]
+    local LuaPlayer = self.player
 
     pcall(function()
         self.data.event.scale = {
