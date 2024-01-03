@@ -26,11 +26,16 @@ end
 
 -- on_game_created_from_scenario
 local function on_game_created_from_scenario(e)
+
     global.log.scenario_active = true
+    
     -- desactive la partie scenario si l'intro freeplay est skip
-    if remote.interfaces.freeplay.get_skip_intro then 
-        global.log.scenario_active = false
+    if script.level.level_name == "freeplay" then 
+        if remote.interfaces.freeplay.get_skip_intro then 
+            global.log.scenario_active = false
+        end
     end
+    
 
     RitnLog():getEvent(e):setIgnore(global.log.events.on_game_created_from_scenario):trace()
 end
