@@ -35,6 +35,7 @@ local RitnLog = class.newclass(function(base, logType)
     ---------------------------------
     base.object_name = "RitnLog"
     base.mod_name = remote.call("RitnLog", "get_mod_name")
+    base.use_print = remote.call("RitnLog", "get_use_print")
     ---------------------------------
     base.log_type = defaultType
     base.custom_type = (defaultType ~= "event")
@@ -165,7 +166,7 @@ function RitnLog:trace()
         log('[' .. string.upper(self.mod_name) .. '] > ' .. game.table_to_json(self.data))
     end
 
-    if (global.log.use_print and not self.ignore)
+    if (self.use_print and not self.ignore)
     or self.force_print then 
         print('[' .. string.upper(self.mod_name) .. '] > ' .. game.table_to_json(self.data))
     end

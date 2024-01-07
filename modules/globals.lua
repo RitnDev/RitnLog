@@ -115,6 +115,9 @@ local log_interface = {
         return global.log.mod_name
     end,
 
+    get_use_print = function()
+        return settings.startup[ritnlib.defines.log.settings.name.enable_log_print].value
+    end,
 
 }
 if not remote.interfaces["RitnLog"] then remote.add_interface("RitnLog", log_interface) end
