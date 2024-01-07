@@ -111,6 +111,10 @@ local log_interface = {
         end
     end,
 
+    get_mod_name = function()
+        return global.log.mod_name
+    end,
+
 
 }
 if not remote.interfaces["RitnLog"] then remote.add_interface("RitnLog", log_interface) end

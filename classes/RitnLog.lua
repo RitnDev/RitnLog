@@ -27,13 +27,17 @@ end
 ----------------------------------------------------------------
 local RitnLog = class.newclass(function(base, logType)
     local defaultType = "event"
-    if logType ~= nil then defaultType = logType end
+    if logType ~= nil then 
+        if type(logType) == "string" then
+            defaultType = logType 
+        end
+    end
     ---------------------------------
     base.object_name = "RitnLog"
-    base.mod_name = global.log.mod_name
+    base.mod_name = remote.call("RitnLog", "get_mod_name")
     ---------------------------------
-    base.type = type_default
-    base.custom_type = false
+    base.log_type = defaultType
+    base.custom_type = (defaultType ~= "event")
     base.force_print = false
     base.ignore = false
     ---------------------------------
@@ -43,6 +47,15 @@ local RitnLog = class.newclass(function(base, logType)
     ---------------------------------
     return self
 end)
+
+
+-- set mod_name
+function RitnLog:setModName(name) 
+    if type(name) == "string" then 
+        self.mod_name = name
+    end
+    return self
+end
 
 
 -- ignore log
@@ -58,7 +71,7 @@ end
 -- set log type
 function RitnLog:setType(value)
     if type(value) == "string" then 
-        self.type = value
+        self.log_type = value
         self.custom_type = true
     end
 
