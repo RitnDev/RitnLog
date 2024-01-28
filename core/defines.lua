@@ -1,5 +1,5 @@
 --------  INIT DATA DEFINES CORE  ----------
-if not ritnlib then ritnlib = { defines={} } end -- pour settings
+if not ritnlib then require("__RitnLib__/defines") end -- pour settings
 ritnlib.defines.log = {}
 --------------------------------------------
 local name = "RitnLog"
