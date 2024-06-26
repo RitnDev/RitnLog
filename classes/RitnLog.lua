@@ -1,12 +1,9 @@
 -- RitnLog
 ----------------------------------------------------------------
-local class = require(ritnlib.defines.class.core)
-local RitnEvent = require(ritnlib.defines.log.class.event)
-----------------------------------------------------------------
 --- FUNCTIONS
 ----------------------------------------------------------------
 
-function table_to_json(table)
+local function table_to_json(table)
     local json = "{"
     for key, value in pairs(table) do
         if type(value) == "table" then
@@ -25,7 +22,7 @@ end
 ----------------------------------------------------------------
 --- CLASSE DEFINES
 ----------------------------------------------------------------
-local RitnLog = class.newclass(function(base, logType)
+RitnLog = ritnlib.classFactory.newclass(function(self, logType)
     local defaultType = "event"
     if logType ~= nil then 
         if type(logType) == "string" then
@@ -33,18 +30,18 @@ local RitnLog = class.newclass(function(base, logType)
         end
     end
     ---------------------------------
-    base.object_name = "RitnLog"
-    base.mod_name = remote.call("RitnLog", "get_mod_name")
-    base.use_print = remote.call("RitnLog", "get_use_print")
+    self.object_name = "RitnLog"
+    self.mod_name = remote.call("RitnLog", "get_mod_name")
+    self.use_print = remote.call("RitnLog", "get_use_print")
     ---------------------------------
-    base.log_type = defaultType
-    base.custom_type = (defaultType ~= "event")
-    base.force_print = false
-    base.ignore = false
+    self.log_type = defaultType
+    self.custom_type = (defaultType ~= "event")
+    self.force_print = false
+    self.ignore = false
     ---------------------------------
-    base.event_index = 0
-    base.event_name = "on_tick"
-    base.data = {}
+    self.event_index = 0
+    self.event_name = "on_tick"
+    self.data = {}
     ---------------------------------
     return self
 end)
@@ -102,9 +99,9 @@ function RitnLog:setForcePrint(value)
 end
 
 
--- get RitnEvent
+-- get RitnLogEvent
 function RitnLog:getEvent(event)
-    self.r_event = RitnEvent(event)
+    self.r_event = RitnLogEvent(event)
     self.event_index = self.r_event.index
     self.event_name = self.r_event.name
 
@@ -173,4 +170,4 @@ function RitnLog:trace()
 end
 
 
-return RitnLog
+--return RitnLog

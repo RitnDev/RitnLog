@@ -16,6 +16,8 @@ local defines = {
         log = mod_name .. ".classes.RitnLog",
     },
 
+    setup = mod_name..".core.setup-classes",
+
     modules = {
         core = mod_name .. ".core.modules",
         ----

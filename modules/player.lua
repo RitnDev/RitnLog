@@ -1,7 +1,4 @@
 ----------------------------------------------------------------------------------------
-local RitnEvent = require(ritnlib.defines.log.class.event)
-local RitnLog = require(ritnlib.defines.log.class.log)
-----------------------------------------------------------------------------------------
 local event_type = "on_player"
 ----------------------------------------------------------------------------------------
 --   FUNCTIONS GLOBAL
@@ -15,7 +12,7 @@ end
 
 local function on_player(e)
     local playerIgnore = globalIgnore(global.log.settings.all_option_player)
-    RitnEvent(e):setIgnore(playerIgnore):log()
+    RitnLogEvent(e):setIgnore(playerIgnore):log()
 end
 
 ----------------------------------------------------------------------------------------
@@ -29,112 +26,112 @@ end
 -- return log : 
 local function on_player_created(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):setIgnore(playerIgnore):createGlobalPlayer():log()
+    RitnLogEvent(e):setIgnore(playerIgnore):createGlobalPlayer():log()
 end
 
 -- on_player_changed_force
 -- return log : 
 local function on_player_changed_force(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):playerChangedForce():setIgnore(playerIgnore):log()
+    RitnLogEvent(e):playerChangedForce():setIgnore(playerIgnore):log()
 end
 
 -- on_player_changed_surface
 -- return log : 
 local function on_player_changed_surface(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):playerChangedSurface():setIgnore(playerIgnore):log()
+    RitnLogEvent(e):playerChangedSurface():setIgnore(playerIgnore):log()
 end
 
 -- on_player_left_game
 -- return log :
 local function on_player_left_game(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):playerLeftGame():setIgnore(playerIgnore):log()
+    RitnLogEvent(e):playerLeftGame():setIgnore(playerIgnore):log()
 end
 
 -- on_player_muted
 -- return log :
 local function on_player_muted(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):setIgnore(playerIgnore):log()
+    RitnLogEvent(e):setIgnore(playerIgnore):log()
 end
 
 -- on_player_unmuted
 -- return log :
 local function on_player_unmuted(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):setIgnore(playerIgnore):log()
+    RitnLogEvent(e):setIgnore(playerIgnore):log()
 end
 
 -- on_player_banned
 -- return log :
 local function on_player_banned(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):playerBanned():setIgnore(playerIgnore):log()
+    RitnLogEvent(e):playerBanned():setIgnore(playerIgnore):log()
 end
 
 -- on_player_unbanned
 -- return log :
 local function on_player_unbanned(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):playerUnbanned():setIgnore(playerIgnore):log()
+    RitnLogEvent(e):playerUnbanned():setIgnore(playerIgnore):log()
 end
 
 -- on_player_kicked
 -- return log :
 local function on_player_kicked(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):playerKicked():setIgnore(playerIgnore):log()
+    RitnLogEvent(e):playerKicked():setIgnore(playerIgnore):log()
 end
 
 -- on_player_cheat_mode_disabled
 -- return log :
 local function on_player_cheat_mode_disabled(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):setIgnore(playerIgnore):log()
+    RitnLogEvent(e):setIgnore(playerIgnore):log()
 end
 
 -- on_player_cheat_mode_enabled
 -- return log :
 local function on_player_cheat_mode_enabled(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):setIgnore(playerIgnore):log()
+    RitnLogEvent(e):setIgnore(playerIgnore):log()
 end
 
 -- on_player_promoted
 -- return log :
 local function on_player_promoted(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):setIgnore(playerIgnore):log()
+    RitnLogEvent(e):setIgnore(playerIgnore):log()
 end
 
 -- on_player_demoted
 -- return log :
 local function on_player_demoted(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):setIgnore(playerIgnore):log()
+    RitnLogEvent(e):setIgnore(playerIgnore):log()
 end
 
 -- on_player_joined_game
 -- return log :
 local function on_player_joined_game(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):setIgnore(playerIgnore):log()
+    RitnLogEvent(e):setIgnore(playerIgnore):log()
 end
 
 -- on_player_died
 -- return log :
 local function on_player_died(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):playerDied():setIgnore(playerIgnore):log()
+    RitnLogEvent(e):playerDied():setIgnore(playerIgnore):log()
 end
 
 -- on_player_respawned
 -- return log :
 local function on_player_respawned(e)
     local playerIgnore = globalIgnore(global.log.settings.option_player_admin)
-    RitnEvent(e):setIgnore(playerIgnore):log()
+    RitnLogEvent(e):setIgnore(playerIgnore):log()
 end
 
 
@@ -144,7 +141,7 @@ end
 
 local function on_player_cursor_stack_changed(e)
     local ignoreCursor = globalIgnore(global.log.settings.cursor_stack_option)
-    RitnEvent(e):setIgnore(ignoreCursor):playerCursorChanged():log()
+    RitnLogEvent(e):setIgnore(ignoreCursor):playerCursorChanged():log()
 end
 
 
@@ -155,7 +152,7 @@ end
 local function on_player_changed_position(e)
     -- ajouter un setting pour l'activation des events pendant le scenario
     local ignorePosition = globalIgnore(global.log.settings.position_option)
-    RitnEvent(e):setIgnore(ignorePosition):playerChangedPosition():log()
+    RitnLogEvent(e):setIgnore(ignorePosition):playerChangedPosition():log()
 end
 
 
@@ -166,27 +163,27 @@ end
 
 local function on_player_display_scale_changed(e)
     local playerIgnore = globalIgnore(global.log.settings.all_option_player)
-    RitnEvent(e):playerDisplayScaleChanged():setIgnore(playerIgnore):log()
+    RitnLogEvent(e):playerDisplayScaleChanged():setIgnore(playerIgnore):log()
 end
 
 
 local function on_player_built_tile(e)
     -- WIP
     local playerIgnore = globalIgnore(global.log.settings.all_option_player)
-    RitnEvent(e):setIgnore(playerIgnore):log()
+    RitnLogEvent(e):setIgnore(playerIgnore):log()
 end
 
 
 local function on_player_cancelled_crafting(e)
     -- WIP
     local playerIgnore = globalIgnore(global.log.settings.all_option_player)
-    RitnEvent(e):setIgnore(playerIgnore):log()
+    RitnLogEvent(e):setIgnore(playerIgnore):log()
 end
 
 local function on_player_clicked_gps_tag(e)
     -- WIP
     local playerIgnore = globalIgnore(global.log.settings.all_option_player)
-    RitnEvent(e):setIgnore(playerIgnore):log()
+    RitnLogEvent(e):setIgnore(playerIgnore):log()
 end
 
 

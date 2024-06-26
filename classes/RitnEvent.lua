@@ -1,7 +1,4 @@
--- RitnEvent
-----------------------------------------------------------------
-local class = require(ritnlib.defines.class.core)
-local LibEvent = require(ritnlib.defines.class.luaClass.event)
+-- RitnLogEvent
 ----------------------------------------------------------------
 
 local function getEventName(event)
@@ -16,37 +13,37 @@ end
 ----------------------------------------------------------------
 --- CLASSE DEFINES
 ----------------------------------------------------------------
-local RitnEvent = class.newclass(LibEvent, function(base, event)
+RitnLogEvent = ritnlib.classFactory.newclass(RitnLibEvent, function(self, event)
     if event == nil then return end
-    LibEvent.init(base, event, ritnlib.defines.log.name)
+    RitnLibEvent.init(self, event, ritnlib.defines.log.name)
     --------------------------------------------------
-    base.mod_name = global.log.mod_name
-    base.force_print = force_print
-    base.ignore = false
-    base.data = {}
-    base.data.type = "details"
+    self.mod_name = global.log.mod_name
+    self.force_print = force_print
+    self.ignore = false
+    self.data = {}
+    self.data.type = "details"
 
-    if base.event then 
-        base.data.type = "event"
-        base.data.event = {
-            id = base.index,
-            event_name = base.name,
+    if self.event then 
+        self.data.type = "event"
+        self.data.event = {
+            id = self.index,
+            event_name = self.name,
         }
 
-        if base.player then 
-            base.data.event.player = {}
-            base.data.event.player.index = base.player.index
-            base.data.event.player.name = base.player.name
+        if self.player then 
+            self.data.event.player = {}
+            self.data.event.player.index = self.player.index
+            self.data.event.player.name = self.player.name
 
             if global.log.settings.option_player_advanced == true then 
-                base.data.event.player.force_name = base.player.force.name
-                base.data.event.player.surface_name = base.player.surface.name
-                base.data.event.player.controller_type = base.player.controller_type
+                self.data.event.player.force_name = self.player.force.name
+                self.data.event.player.surface_name = self.player.surface.name
+                self.data.event.player.controller_type = self.player.controller_type
             end
         end
 
-        if string.sub(base.name,1,13) ==  "on_pre_player" then 
-            base.ignore = true
+        if string.sub(self.name,1,13) ==  "on_pre_player" then 
+            self.ignore = true
         end
     end
 end)
@@ -54,7 +51,7 @@ end)
 
 
 -- declenche des events pour création des infos par defaut du jeu
-function RitnEvent:active_default()
+function RitnLogEvent:active_default()
     if global.log.default_active == false then 
         -- create force by default (neutral, enemy, player)
         local ev = {name = defines.events.on_force_created}
@@ -92,7 +89,7 @@ function RitnEvent:active_default()
 end
 
 
-function RitnEvent:createGlobalPlayer()
+function RitnLogEvent:createGlobalPlayer()
     local LuaPlayer = self.player
     self:active_default()
     if not global.log.players[LuaPlayer.name] then 
@@ -109,19 +106,19 @@ end
 -- GETTERS
 
 
-function RitnEvent:getName()
+function RitnLogEvent:getName()
     return self.name
 end
 
-function RitnEvent:getIndex()
+function RitnLogEvent:getIndex()
     return self.index
 end
 
-function RitnEvent:getModName()
+function RitnLogEvent:getModName()
     return self.mod_name
 end
 
-function RitnEvent:getIgnore()
+function RitnLogEvent:getIgnore()
     return self.ignore
 end
 
@@ -129,7 +126,7 @@ end
 
 -- SETTERS
 
-function RitnEvent:setModName(modName)
+function RitnLogEvent:setModName(modName)
     if modName then 
         if type(modName) == "string" then 
             self.mod_name = modName
@@ -139,7 +136,7 @@ function RitnEvent:setModName(modName)
 end
 
 
-function RitnEvent:setIgnore(ignore)
+function RitnLogEvent:setIgnore(ignore)
     if type(ignore) == "boolean" then 
         self.ignore = ignore
     end
@@ -147,7 +144,7 @@ function RitnEvent:setIgnore(ignore)
 end
 
 
-function RitnEvent:playerChangedPosition()
+function RitnLogEvent:playerChangedPosition()
     if global.log.scenario_active == true then return self end
 
     local LuaPlayer = self.player
@@ -173,7 +170,7 @@ function RitnEvent:playerChangedPosition()
 end
 
 
-function RitnEvent:playerChangedForce()
+function RitnLogEvent:playerChangedForce()
     local LuaForce = self.force
     if LuaForce then 
         if LuaForce.valid then 
@@ -186,7 +183,7 @@ function RitnEvent:playerChangedForce()
 end
 
 
-function RitnEvent:playerChangedSurface()
+function RitnLogEvent:playerChangedSurface()
     local LuaSurface = self.surface
     if LuaSurface then 
         if LuaSurface.valid then 
@@ -199,7 +196,7 @@ function RitnEvent:playerChangedSurface()
 end
 
 
-function RitnEvent:playerLeftGame()
+function RitnLogEvent:playerLeftGame()
     if self.reason then 
         if type(self.reason) == "string" then 
             self.data.event.reason = self.reason
@@ -209,7 +206,7 @@ function RitnEvent:playerLeftGame()
 end
 
 
-function RitnEvent:playerBanned()
+function RitnLogEvent:playerBanned()
     self.data.event.banned = {
         name = "",
         byPlayer = "server",
@@ -225,7 +222,7 @@ function RitnEvent:playerBanned()
     return self
 end
 
-function RitnEvent:playerUnbanned()
+function RitnLogEvent:playerUnbanned()
     self.data.event.unbanned = {
         name = "",
         byPlayer = "server",
@@ -242,7 +239,7 @@ function RitnEvent:playerUnbanned()
 end
 
 
-function RitnEvent:playerKicked()
+function RitnLogEvent:playerKicked()
     self.data.event.kicked = {
         byPlayer = "server",
     }
@@ -257,7 +254,7 @@ function RitnEvent:playerKicked()
 end
 
 
-function RitnEvent:playerDied()
+function RitnLogEvent:playerDied()
     local LuaEntity = self.cause
 
     if LuaEntity then 
@@ -273,7 +270,7 @@ function RitnEvent:playerDied()
 end
 
 
-function RitnEvent:playerCursorChanged()
+function RitnLogEvent:playerCursorChanged()
     local LuaPlayer  = self.player
 
     self.data.event.cursor = {}
@@ -290,7 +287,7 @@ function RitnEvent:playerCursorChanged()
 end
 
 
-function RitnEvent:playerDisplayScaleChanged()
+function RitnLogEvent:playerDisplayScaleChanged()
     local LuaPlayer = self.player
 
     pcall(function()
@@ -308,14 +305,14 @@ end
 
 --- METHODES
 
-function RitnEvent:setData(data)
+function RitnLogEvent:setData(data)
     self.data.details = data
     return self
 end
 
 
 -- trace Log ( ou print() )
-function RitnEvent:log(force_print, data)
+function RitnLogEvent:log(force_print, data)
 
     if self.ignore ~= nil then
         if self.ignore == true then return end
@@ -349,4 +346,4 @@ end
 
 
 ----------------------------------------------------------------
-return RitnEvent
+--return RitnLogEvent
