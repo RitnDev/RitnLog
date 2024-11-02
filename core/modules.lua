@@ -1,9 +1,10 @@
 local modules = {}
+log('modules RitnLog')
 ------------------------------------------------------------------------------
 -- Inclus les events onInit et onLoad + les ajouts de commandes
-modules.globals =   require(ritnlib.defines.log.modules.globals)
+modules.log_globals =   require(ritnlib.defines.log.modules.globals)
 ------------------------------------------------------------------------------
-modules.events = require(ritnlib.defines.log.modules.events)
+modules.log_events = require(ritnlib.defines.log.modules.events)
 --modules.player = require(ritnlib.defines.log.modules.player)
 ------------------------------------------------------------------------------
 return modules

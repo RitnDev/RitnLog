@@ -15,7 +15,7 @@ local function ignore(e) return end
 local function basic(e) 
     if e.name == 0 then return end
     local event_name = getEventName(e)
-    RitnLog():getEvent(e):setIgnore(global.log.events[event_name]):trace()
+    RitnLog():getEvent(e):setIgnore(storage.log.events[event_name]):trace()
 end
 ----------------------------------------------------------------------------------------
 -- EVENTS
@@ -25,23 +25,23 @@ end
 -- on_game_created_from_scenario
 local function on_game_created_from_scenario(e)
 
-    global.log.scenario_active = true
+    storage.log.scenario_active = true
     
     -- desactive la partie scenario si l'intro freeplay est skip
     if script.level.level_name == "freeplay" then 
         if remote.interfaces.freeplay.get_skip_intro then 
-            global.log.scenario_active = false
+            storage.log.scenario_active = false
         end
     end
     
 
-    RitnLog():getEvent(e):setIgnore(global.log.events.on_game_created_from_scenario):trace()
+    RitnLog():getEvent(e):setIgnore(storage.log.events.on_game_created_from_scenario):trace()
 end
 
 -- on_cutscene_cancelled
 local function on_cutscene_cancelled(e)
-    global.log.scenario_active = false
-    RitnLog():getEvent(e):setIgnore(global.log.events.on_cutscene_cancelled):trace()
+    storage.log.scenario_active = false
+    RitnLog():getEvent(e):setIgnore(storage.log.events.on_cutscene_cancelled):trace()
 end
 
 ---------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ module.events = {}
 for name,event in pairs(defines.events) do 
     --if string.sub(name,1,9) ~=  "on_player" 
     --and string.sub(name,1,13) ~=  "on_pre_player" then 
-        --if global.log.events[name] then 
+        --if storage.log.events[name] then 
             module.events[event] = basic
         --else
             --module.events[event] = ignore  
@@ -73,7 +73,7 @@ for i,v in pairs(player.events) do
 end
 ---------------------------------------------------------------------------------
 -- ignore events (settings)
-if global.log.settings.all_option then 
+if storage.log.settings.all_option then 
     module.events[defines.events.on_string_translated] = ignore
     module.events[defines.events.on_chunk_generated] = ignore
     module.events[defines.events.on_chunk_charted] = ignore

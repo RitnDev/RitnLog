@@ -121,7 +121,7 @@ function RitnLog:dataPlayer()
     self.data.event.player.index = self.r_event.player.index
     self.data.event.player.name = self.r_event.player.name
 
-    if global.log.settings.option_player_advanced == true then 
+    if storage.log.settings.option_player_advanced == true then 
         self.data.event.player.force_name = self.r_event.player.force.name
         self.data.event.player.surface_name = self.r_event.player.surface.name
         self.data.event.player.controller_type = self.r_event.player.controller_type
@@ -134,11 +134,11 @@ end
 
 function RitnLog:dataPlayerChangedPosition()
     if self.r_event.player == nil then return end
-    if global.log.scenario_active == true then return self end
+    if storage.log.scenario_active == true then return self end
 
     if self.r_event.player.valid then 
         if self.r_event.player.object_name == "LuaPlayer" then 
-            if global.log.settings.advanced_position then 
+            if storage.log.settings.advanced_position then 
                 self.data.event.position = {
                     x=self.r_event.player.position.x,
                     y=self.r_event.player.position.y,
@@ -160,12 +160,12 @@ end
 -- trace log
 function RitnLog:trace()
     if not self.ignore then
-        log('[' .. string.upper(self.mod_name) .. '] > ' .. game.table_to_json(self.data))
+        log('[' .. string.upper(self.mod_name) .. '] > ' .. helpers.table_to_json(self.data))
     end
 
     if (self.use_print and not self.ignore)
     or self.force_print then 
-        print('[' .. string.upper(self.mod_name) .. '] > ' .. game.table_to_json(self.data))
+        print('[' .. string.upper(self.mod_name) .. '] > ' .. helpers.table_to_json(self.data))
     end
 end
 

@@ -17,7 +17,7 @@ RitnLogEvent = ritnlib.classFactory.newclass(RitnLibEvent, function(self, event)
     if event == nil then return end
     RitnLibEvent.init(self, event, ritnlib.defines.log.name)
     --------------------------------------------------
-    self.mod_name = global.log.mod_name
+    self.mod_name = storage.log.mod_name
     self.force_print = force_print
     self.ignore = false
     self.data = {}
@@ -35,7 +35,7 @@ RitnLogEvent = ritnlib.classFactory.newclass(RitnLibEvent, function(self, event)
             self.data.event.player.index = self.player.index
             self.data.event.player.name = self.player.name
 
-            if global.log.settings.option_player_advanced == true then 
+            if storage.log.settings.option_player_advanced == true then 
                 self.data.event.player.force_name = self.player.force.name
                 self.data.event.player.surface_name = self.player.surface.name
                 self.data.event.player.controller_type = self.player.controller_type
@@ -52,7 +52,7 @@ end)
 
 -- declenche des events pour création des infos par defaut du jeu
 function RitnLogEvent:active_default()
-    if global.log.default_active == false then 
+    if storage.log.default_active == false then 
         -- create force by default (neutral, enemy, player)
         local ev = {name = defines.events.on_force_created}
         local data = {}
@@ -84,7 +84,7 @@ function RitnLogEvent:active_default()
             self:log(self.force_print, data)
         end
 
-        global.log.default_active = true
+        storage.log.default_active = true
     end
 end
 
@@ -92,8 +92,8 @@ end
 function RitnLogEvent:createGlobalPlayer()
     local LuaPlayer = self.player
     self:active_default()
-    if not global.log.players[LuaPlayer.name] then 
-        global.log.players[LuaPlayer.name] = {
+    if not storage.log.players[LuaPlayer.name] then 
+        storage.log.players[LuaPlayer.name] = {
             name = LuaPlayer.name,
             index = LuaPlayer.index
         }
@@ -145,13 +145,13 @@ end
 
 
 function RitnLogEvent:playerChangedPosition()
-    if global.log.scenario_active == true then return self end
+    if storage.log.scenario_active == true then return self end
 
     local LuaPlayer = self.player
     if LuaPlayer then 
         if LuaPlayer.valid then 
             if LuaPlayer.object_name == "LuaPlayer" then 
-                if global.log.settings.advanced_position then 
+                if storage.log.settings.advanced_position then 
                     self.data.event.position = {
                         x=LuaPlayer.position.x,
                         y=LuaPlayer.position.y,
@@ -327,19 +327,19 @@ function RitnLogEvent:log(force_print, data)
             local_data = data
         end
         
-        if global.log.use_print then 
-            print('[' .. string.upper(self.mod_name) .. '] > ' .. game.table_to_json(local_data)) 
+        if storage.log.use_print then 
+            print('[' .. string.upper(self.mod_name) .. '] > ' .. helpers.table_to_json(local_data)) 
             print_ok = true
         end
         
-        if global.log.use_log then 
-            log('[' .. string.upper(self.mod_name) .. '] > ' .. game.table_to_json(local_data)) 
+        if storage.log.use_log then 
+            log('[' .. string.upper(self.mod_name) .. '] > ' .. helpers.table_to_json(local_data)) 
         end
         
         if force_print == nil then return end
         
         if force_print == true and print_ok == false then 
-            print('[' .. string.upper(self.mod_name) .. '] > ' .. game.table_to_json(local_data)) 
+            print('[' .. string.upper(self.mod_name) .. '] > ' .. helpers.table_to_json(local_data)) 
         end
     end)
 end

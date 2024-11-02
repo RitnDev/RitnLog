@@ -5,8 +5,8 @@ local enabled_all_events = not settings.startup[ritnlib.defines.log.settings.nam
 ---------------------------------------------------------------------------------------------
 -- GLOBALS
 ---------------------------------------------------------------------------------------------
-if global.log == nil then 
-    global.log = {
+if storage.log == nil then 
+    storage.log = {
         default_active = false,
         scenario_active = false,
         use_print = settings.startup[ritnlib.defines.log.settings.name.enable_log_print].value,
@@ -29,22 +29,22 @@ end
 ----------------------------------------------------
 
 -- active print()
---global.log.use_print = global.log.settings.option_print
---global.log.use_log = global.settings.option_logfile
+--storage.log.use_print = storage.log.settings.option_print
+--storage.log.use_log = storage.settings.option_logfile
 
 
-if not global.log.events then 
-    global.log.events = {}
+if not storage.log.events then 
+    storage.log.events = {}
     -- for all events
     for name,event in pairs(defines.events) do 
         if event ~= 0 then 
-            global.log.events[name] = enabled_all_events 
+            storage.log.events[name] = enabled_all_events 
         end
     end
 end
 
-global.log.events.on_game_created_from_scenario = settings.startup[ritnlib.defines.log.settings.name.on_game_created_from_scenario].value
-global.log.events.on_cutscene_cancelled = settings.startup[ritnlib.defines.log.settings.name.on_cutscene_cancelled].value
+storage.log.events.on_game_created_from_scenario = settings.startup[ritnlib.defines.log.settings.name.on_game_created_from_scenario].value
+storage.log.events.on_cutscene_cancelled = settings.startup[ritnlib.defines.log.settings.name.on_cutscene_cancelled].value
 ---------------------------------------------------------------------------------------------
 -- REMOTE FUNCTIONS INTERFACE
 ---------------------------------------------------------------------------------------------
@@ -95,8 +95,8 @@ local log_interface = {
 
     -- disable_event
     disable_event = function(event_name)
-        if global.log.events[event_name] then 
-            global.log.events[event_name] = false
+        if storage.log.events[event_name] then 
+            storage.log.events[event_name] = false
         end
     end,
 
@@ -105,14 +105,14 @@ local log_interface = {
         if mod_name then 
             if type(mod_name) == "string" then 
                 if mod_name ~= "" then 
-                    global.log.mod_name = mod_name
+                    storage.log.mod_name = mod_name
                 end
             end
         end
     end,
 
     get_mod_name = function()
-        return global.log.mod_name
+        return storage.log.mod_name
     end,
 
     get_use_print = function()
