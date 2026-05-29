@@ -214,7 +214,7 @@ function RitnLogEvent:playerBanned()
     
     pcall(function() self.data.event.banned.name = self.player.name end)
     pcall(function() 
-        local byPlayer = game.players[self.event.by_player]
+        local byPlayer = game.get_player(self.event.by_player]
         self.data.event.banned.byPlayer = byPlayer.name 
     end)
     pcall(function() self.data.event.banned.reason = self.reason end)
@@ -230,7 +230,7 @@ function RitnLogEvent:playerUnbanned()
     
     pcall(function() self.data.event.unbanned.name = self.player.name end)
     pcall(function() 
-        local byPlayer = game.players[self.event.by_player]
+        local byPlayer = game.get_player(self.event.by_player]
         self.data.event.unbanned.byPlayer = byPlayer.name 
     end)
     pcall(function() self.data.event.unbanned.reason = self.reason end)
@@ -245,7 +245,7 @@ function RitnLogEvent:playerKicked()
     }
 
     pcall(function() 
-        local byPlayer = game.players[self.event.by_player]
+        local byPlayer = game.get_player(self.event.by_player]
         self.data.event.kicked.byPlayer = byPlayer.name 
     end)
     pcall(function() self.data.event.kicked.reason = self.reason end)
