@@ -214,7 +214,7 @@ function RitnLogEvent:playerBanned()
     
     pcall(function() self.data.event.banned.name = self.player.name end)
     pcall(function() 
-        local byPlayer = game.get_player(self.event.by_player]
+        local byPlayer = game.get_player(self.event.by_player)
         self.data.event.banned.byPlayer = byPlayer.name 
     end)
     pcall(function() self.data.event.banned.reason = self.reason end)
